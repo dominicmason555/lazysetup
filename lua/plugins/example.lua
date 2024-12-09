@@ -1,6 +1,6 @@
 -- since this is just an example spec, don't actually load anything here and return an empty spec
 -- stylua: ignore
-if true then return {} end
+-- if true then return {} end
 
 -- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
 --
@@ -26,9 +26,6 @@ return {
     -- opts will be merged with the parent spec
     opts = { use_diagnostic_signs = true },
   },
-
-  -- disable trouble
-  { "folke/trouble.nvim", enabled = false },
 
   -- override nvim-cmp and add cmp-emoji
   {
@@ -191,7 +188,34 @@ return {
         "shellcheck",
         "shfmt",
         "flake8",
+        "fennel-ls",
+        "ruff"
       },
     },
   },
+  {
+    "Olical/conjure",
+    ft = { "clojure", "fennel", "python", "hy", "janet" }, -- etc
+    lazy = true,
+    init = function()
+      -- Set configuration options here
+      -- Uncomment this to get verbose logging to help diagnose internal Conjure issues
+      -- This is VERY helpful when reporting an issue with the project
+      -- vim.g["conjure#debug"] = true
+    end,
+
+    -- Optional cmp-conjure integration
+    dependencies = { "PaterJason/cmp-conjure" },
+  },
+  {
+    "PaterJason/cmp-conjure",
+    lazy = true,
+    config = function()
+      local cmp = require("cmp")
+      local config = cmp.get_config()
+      table.insert(config.sources, { name = "conjure" })
+      return cmp.setup(config)
+    end,
+  },
+  { "hylang/vim-hy" },
 }
